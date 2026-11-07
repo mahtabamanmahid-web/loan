@@ -75,30 +75,30 @@ CREATE TABLE `admin_permissions` (
 
 /*!40000 ALTER TABLE `admin_permissions` DISABLE KEYS */;
 INSERT INTO `admin_permissions` VALUES
-(1,'View dashboard','dashboard.view','dashboard','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(2,'View customers','users.view','users','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(3,'Edit / block customers','users.manage','users','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(4,'Verify NID documents','kyc.review','users','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(5,'View applications & loans','loans.view','loans','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(6,'Review applications / request documents','loans.review','loans','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(7,'Approve / reject applications','loans.approve','loans','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(8,'Create loan agreements','loans.agreement','loans','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(9,'Record disbursements','loans.disburse','loans','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(10,'Record manual repayments','loans.repayments','loans','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(11,'Manage loan packages & durations','products.manage','loans','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(12,'View payments','payments.view','payments','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(13,'Re-verify payments with gateway','payments.verify','payments','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(14,'Refund payments','payments.refund','payments','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(15,'Export payment reports','payments.export','payments','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(16,'Loan settings','settings.loan','content','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(17,'Website customization & SEO','settings.website','content','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(18,'Manage reviews','reviews.manage','content','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(19,'Manage FAQ & announcements','content.manage','content','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(20,'Handle support tickets','tickets.manage','content','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(21,'Manage admin users & roles','admins.manage','system','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(22,'View activity & login logs','logs.view','system','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(23,'Database backups','backups.manage','system','2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(24,'Maintenance mode & system settings','system.manage','system','2026-11-07 12:36:51','2026-11-07 12:36:51');
+(1,'View dashboard','dashboard.view','dashboard','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(2,'View customers','users.view','users','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(3,'Edit / block customers','users.manage','users','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(4,'Verify NID documents','kyc.review','users','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(5,'View applications & loans','loans.view','loans','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(6,'Review applications / request documents','loans.review','loans','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(7,'Approve / reject applications','loans.approve','loans','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(8,'Create loan agreements','loans.agreement','loans','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(9,'Record disbursements','loans.disburse','loans','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(10,'Record manual repayments','loans.repayments','loans','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(11,'Manage loan packages & durations','products.manage','loans','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(12,'View payments','payments.view','payments','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(13,'Re-verify payments with gateway','payments.verify','payments','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(14,'Refund payments','payments.refund','payments','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(15,'Export payment reports','payments.export','payments','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(16,'Loan settings','settings.loan','content','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(17,'Website customization & SEO','settings.website','content','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(18,'Manage reviews','reviews.manage','content','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(19,'Manage FAQ & announcements','content.manage','content','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(20,'Handle support tickets','tickets.manage','content','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(21,'Manage admin users & roles','admins.manage','system','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(22,'View activity & login logs','logs.view','system','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(23,'Database backups','backups.manage','system','2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(24,'Maintenance mode & system settings','system.manage','system','2026-11-07 14:48:03','2026-11-07 14:48:03');
 /*!40000 ALTER TABLE `admin_permissions` ENABLE KEYS */;
 
 --
@@ -220,11 +220,11 @@ CREATE TABLE `admin_roles` (
 
 /*!40000 ALTER TABLE `admin_roles` DISABLE KEYS */;
 INSERT INTO `admin_roles` VALUES
-(1,'Super Admin','super_admin',NULL,'2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(2,'Manager','manager',NULL,'2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(3,'Loan Officer','loan_officer',NULL,'2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(4,'Payment Manager','payment_manager',NULL,'2026-11-07 12:36:51','2026-11-07 12:36:51'),
-(5,'Support Agent','support_agent',NULL,'2026-11-07 12:36:52','2026-11-07 12:36:52');
+(1,'Super Admin','super_admin',NULL,'2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(2,'Manager','manager',NULL,'2026-11-07 14:48:03','2026-11-07 14:48:03'),
+(3,'Loan Officer','loan_officer',NULL,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(4,'Payment Manager','payment_manager',NULL,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(5,'Support Agent','support_agent',NULL,'2026-11-07 14:48:04','2026-11-07 14:48:04');
 /*!40000 ALTER TABLE `admin_roles` ENABLE KEYS */;
 
 --
@@ -357,12 +357,12 @@ CREATE TABLE `faqs` (
 
 /*!40000 ALTER TABLE `faqs` DISABLE KEYS */;
 INSERT INTO `faqs` VALUES
-(1,'Who can apply?','কে আবেদন করতে পারবেন?','Bangladeshi citizens aged 18+ with a valid NID, an active mobile number and a regular income.','১৮ বছর বা তার বেশি বয়সী বাংলাদেশি নাগরিক, যাঁদের বৈধ এনআইডি, সক্রিয় মোবাইল নম্বর ও নিয়মিত আয় আছে।',0,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(2,'Which documents do I need?','কী কী কাগজ লাগবে?','Clear photos of the front and back of your NID. A selfie may be requested.','আপনার এনআইডির সামনের ও পেছনের স্পষ্ট ছবি। প্রয়োজনে একটি সেলফি চাওয়া হতে পারে।',1,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(3,'Do I have to pay anything to apply?','আবেদন করতে কি কোনো টাকা দিতে হয়?','No. Applying is free. Any processing fee is shown in the agreement before you accept, and it is never required before approval.','না। আবেদন সম্পূর্ণ বিনামূল্যে। কোনো প্রসেসিং ফি থাকলে তা চুক্তিতে আগেই দেখানো হয় এবং অনুমোদনের আগে কখনো চাওয়া হয় না।',2,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(4,'Is approval guaranteed?','ঋণ পাওয়া কি নিশ্চিত?','No. Every application is reviewed individually. Payments of any fee do not guarantee approval.','না। প্রতিটি আবেদন আলাদাভাবে যাচাই করা হয়। কোনো ফি পরিশোধ করলেই ঋণ নিশ্চিত হয় না।',3,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(5,'How do I pay installments?','কিস্তি কীভাবে দেব?','From your dashboard, open the loan and tap \"Pay Installment\". You can pay with bKash, Nagad, Rocket and other methods.','ড্যাশবোর্ড থেকে ঋণটি খুলে \"কিস্তি পরিশোধ করুন\" চাপুন। বিকাশ, নগদ, রকেটসহ বিভিন্ন মাধ্যমে পরিশোধ করা যায়।',4,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(6,'Is my NID information safe?','আমার এনআইডির তথ্য কি নিরাপদ?','Yes. NID numbers are encrypted and images are stored privately. Only authorised staff can view them.','হ্যাঁ। এনআইডি নম্বর এনক্রিপ্ট করা থাকে এবং ছবিগুলো গোপনে সংরক্ষিত হয়। শুধু অনুমোদিত কর্মকর্তারা দেখতে পারেন।',5,1,'2026-11-07 12:36:52','2026-11-07 12:36:52');
+(1,'Who can apply?','কে আবেদন করতে পারবেন?','Bangladeshi citizens aged 18+ with a valid NID, an active mobile number and a regular income.','১৮ বছর বা তার বেশি বয়সী বাংলাদেশি নাগরিক, যাঁদের বৈধ এনআইডি, সক্রিয় মোবাইল নম্বর ও নিয়মিত আয় আছে।',0,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(2,'Which documents do I need?','কী কী কাগজ লাগবে?','Clear photos of the front and back of your NID. A selfie may be requested.','আপনার এনআইডির সামনের ও পেছনের স্পষ্ট ছবি। প্রয়োজনে একটি সেলফি চাওয়া হতে পারে।',1,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(3,'Do I have to pay anything to apply?','আবেদন করতে কি কোনো টাকা দিতে হয়?','No. Applying is free. Any processing fee is shown in the agreement before you accept, and it is never required before approval.','না। আবেদন সম্পূর্ণ বিনামূল্যে। কোনো প্রসেসিং ফি থাকলে তা চুক্তিতে আগেই দেখানো হয় এবং অনুমোদনের আগে কখনো চাওয়া হয় না।',2,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(4,'Is approval guaranteed?','ঋণ পাওয়া কি নিশ্চিত?','No. Every application is reviewed individually. Payments of any fee do not guarantee approval.','না। প্রতিটি আবেদন আলাদাভাবে যাচাই করা হয়। কোনো ফি পরিশোধ করলেই ঋণ নিশ্চিত হয় না।',3,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(5,'How do I pay installments?','কিস্তি কীভাবে দেব?','From your dashboard, open the loan and tap \"Pay Installment\". You can pay with bKash, Nagad, Rocket and other methods.','ড্যাশবোর্ড থেকে ঋণটি খুলে \"কিস্তি পরিশোধ করুন\" চাপুন। বিকাশ, নগদ, রকেটসহ বিভিন্ন মাধ্যমে পরিশোধ করা যায়।',4,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(6,'Is my NID information safe?','আমার এনআইডির তথ্য কি নিরাপদ?','Yes. NID numbers are encrypted and images are stored privately. Only authorised staff can view them.','হ্যাঁ। এনআইডি নম্বর এনক্রিপ্ট করা থাকে এবং ছবিগুলো গোপনে সংরক্ষিত হয়। শুধু অনুমোদিত কর্মকর্তারা দেখতে পারেন।',5,1,'2026-11-07 14:48:04','2026-11-07 14:48:04');
 /*!40000 ALTER TABLE `faqs` ENABLE KEYS */;
 
 --
@@ -605,8 +605,8 @@ CREATE TABLE `loan_products` (
 
 /*!40000 ALTER TABLE `loan_products` DISABLE KEYS */;
 INSERT INTO `loan_products` VALUES
-(1,'Personal Loan','ব্যক্তিগত ঋণ','personal-loan','For personal and family needs.','ব্যক্তিগত ও পারিবারিক প্রয়োজনে।','user-round',5000.00,50000.00,'monthly','percent',1.00,'deduct',0,'Covers application processing, KYC verification and documentation.','Deducted from the disbursed amount only when the loan is disbursed. Nothing is charged if the application is rejected.',0.00,3,1,0,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(2,'Small Business Loan','ক্ষুদ্র ব্যবসা ঋণ','small-business-loan','Working capital for small shops and businesses.','ছোট দোকান ও ব্যবসার মূলধনের জন্য।','store',10000.00,100000.00,'monthly','percent',1.50,'deduct',0,'Covers application processing, KYC verification and documentation.','Deducted from the disbursed amount only when the loan is disbursed. Nothing is charged if the application is rejected.',0.00,3,1,1,'2026-11-07 12:36:52','2026-11-07 12:36:52');
+(1,'Personal Loan','ব্যক্তিগত ঋণ','personal-loan','For personal and family needs.','ব্যক্তিগত ও পারিবারিক প্রয়োজনে।','user-round',5000.00,50000.00,'monthly','percent',0.50,'upfront',1,'Refundable security deposit (জামানত), paid only after your loan is approved and you accept the agreement.','Fully refunded if the loan is not disbursed, and returned after the loan is fully repaid.',0.00,3,1,0,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(2,'Small Business Loan','ক্ষুদ্র ব্যবসা ঋণ','small-business-loan','Working capital for small shops and businesses.','ছোট দোকান ও ব্যবসার মূলধনের জন্য।','store',10000.00,100000.00,'monthly','percent',0.50,'upfront',1,'Refundable security deposit (জামানত), paid only after your loan is approved and you accept the agreement.','Fully refunded if the loan is not disbursed, and returned after the loan is fully repaid.',0.00,3,1,1,'2026-11-07 14:48:04','2026-11-07 14:48:04');
 /*!40000 ALTER TABLE `loan_products` ENABLE KEYS */;
 
 --
@@ -675,13 +675,13 @@ CREATE TABLE `loan_terms` (
 
 /*!40000 ALTER TABLE `loan_terms` DISABLE KEYS */;
 INSERT INTO `loan_terms` VALUES
-(1,1,3,10.00,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(2,1,6,11.00,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(3,1,9,12.00,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(4,1,12,13.00,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(5,2,6,11.00,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(6,2,9,12.00,1,'2026-11-07 12:36:52','2026-11-07 12:36:52'),
-(7,2,12,12.50,1,'2026-11-07 12:36:52','2026-11-07 12:36:52');
+(1,1,3,10.00,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(2,1,6,11.00,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(3,1,9,12.00,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(4,1,12,13.00,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(5,2,6,11.00,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(6,2,9,12.00,1,'2026-11-07 14:48:04','2026-11-07 14:48:04'),
+(7,2,12,12.50,1,'2026-11-07 14:48:04','2026-11-07 14:48:04');
 /*!40000 ALTER TABLE `loan_terms` ENABLE KEYS */;
 
 --
@@ -1215,7 +1215,7 @@ CREATE TABLE `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES
-(1,'Super Admin','01700000000','mahtabamanmahid@gmail.com','2026-11-07 12:36:55','2026-11-07 12:36:55','$2y$12$INAKW08ncErAmZsoVtsUJemL2f8kGlN3XgPnXixoa/hecS1h7wGMm',1,NULL,'bn',NULL,0,NULL,NULL,NULL,NULL,NULL,'2026-11-07 12:36:55','2026-11-07 12:36:55',NULL);
+(1,'Super Admin','01700000000','mahtabamanmahid@gmail.com','2026-11-07 14:48:11','2026-11-07 14:48:11','$2y$12$gSJVInh.haJB/oKpElPArOIViPLZwms0x8Rp3DoLLWzAKBwd/4sdC',1,NULL,'bn',NULL,0,NULL,NULL,NULL,NULL,NULL,'2026-11-07 14:48:11','2026-11-07 14:48:11',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 --
@@ -1254,4 +1254,4 @@ CREATE TABLE `website_settings` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-07 18:37:10
+-- Dump completed on 2026-11-07 20:48:11

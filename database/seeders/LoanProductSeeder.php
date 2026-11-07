@@ -22,13 +22,13 @@ class LoanProductSeeder extends Seeder
             [
                 'name' => 'Personal Loan', 'name_bn' => 'ব্যক্তিগত ঋণ', 'slug' => 'personal-loan', 'icon' => 'user-round',
                 'description' => 'For personal and family needs.', 'description_bn' => 'ব্যক্তিগত ও পারিবারিক প্রয়োজনে।',
-                'min_amount' => 5000, 'max_amount' => 50000, 'processing_fee_value' => 1,
+                'min_amount' => 5000, 'max_amount' => 50000, 'processing_fee_value' => 0.5,
                 'terms' => [3 => 10, 6 => 11, 9 => 12, 12 => 13],
             ],
             [
                 'name' => 'Small Business Loan', 'name_bn' => 'ক্ষুদ্র ব্যবসা ঋণ', 'slug' => 'small-business-loan', 'icon' => 'store',
                 'description' => 'Working capital for small shops and businesses.', 'description_bn' => 'ছোট দোকান ও ব্যবসার মূলধনের জন্য।',
-                'min_amount' => 10000, 'max_amount' => 100000, 'processing_fee_value' => 1.5,
+                'min_amount' => 10000, 'max_amount' => 100000, 'processing_fee_value' => 0.5,
                 'terms' => [6 => 11, 9 => 12, 12 => 12.5],
             ],
         ];
@@ -38,11 +38,12 @@ class LoanProductSeeder extends Seeder
             unset($p['terms']);
 
             $product = LoanProduct::create($p + [
+                // Refundable security deposit (জামানত). Percentage is editable in Admin → Loan Packages.
                 'processing_fee_type' => 'percent',
-                'fee_collection' => 'deduct',
-                'fee_refundable' => false,
-                'fee_purpose' => 'Covers application processing, KYC verification and documentation.',
-                'fee_refund_policy' => 'Deducted from the disbursed amount only when the loan is disbursed. Nothing is charged if the application is rejected.',
+                'fee_collection' => 'upfront',
+                'fee_refundable' => true,
+                'fee_purpose' => 'Refundable security deposit (জামানত), paid only after your loan is approved and you accept the agreement.',
+                'fee_refund_policy' => 'Fully refunded if the loan is not disbursed, and returned after the loan is fully repaid.',
                 'late_fee_per_installment' => 0,
                 'grace_days' => 3,
                 'sort_order' => $i,
