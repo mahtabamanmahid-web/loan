@@ -1,0 +1,6 @@
+@extends('errors.layout')
+@section('title', __('Too many requests'))
+@section('code', '429')
+@section('icon', 'hourglass')
+@section('heading', __('Too many requests'))
+@section('message', __('Please wait a minute and try again.'))

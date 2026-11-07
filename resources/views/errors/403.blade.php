@@ -1,0 +1,6 @@
+@extends('errors.layout')
+@section('title', __('Access denied'))
+@section('code', '403')
+@section('icon', 'shield-x')
+@section('heading', __('Access denied'))
+@section('message', $exception?->getMessage() ?: __('You do not have permission to view this page.'))

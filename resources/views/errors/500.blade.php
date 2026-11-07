@@ -1,0 +1,6 @@
+@extends('errors.layout')
+@section('title', __('Server error'))
+@section('code', '500')
+@section('icon', 'server-crash')
+@section('heading', __('Something went wrong'))
+@section('message', __('We are fixing it. Please try again in a few minutes. Your data is safe.'))

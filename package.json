@@ -1,0 +1,13 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "description": "Front-end build for the Online Loan Management System. Only Tailwind CSS needs building; Alpine.js, Lucide and AOS are vendored in public/vendor.",
+    "scripts": {
+        "build": "tailwindcss -i resources/css/app.css -o public/css/app.css --minify",
+        "dev": "tailwindcss -i resources/css/app.css -o public/css/app.css --watch"
+    },
+    "devDependencies": {
+        "@tailwindcss/cli": "^4.1.11",
+        "tailwindcss": "^4.1.11"
+    }
+}
