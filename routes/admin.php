@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\LoanController;
 use App\Http\Controllers\Admin\LoanProductController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\RoleController;
@@ -88,6 +89,12 @@ Route::middleware(['auth', 'admin', 'not.blocked'])->group(function () {
     Route::get('/payments-export', [PaymentController::class, 'export'])->middleware('can:payments.export')->name('payments.export');
     Route::post('/payments/{transaction}/verify', [PaymentController::class, 'verify'])->middleware(['can:payments.verify', 'throttle:20,1'])->name('payments.verify');
     Route::post('/payments/{transaction}/refund', [PaymentController::class, 'refund'])->middleware('can:payments.refund')->name('payments.refund');
+    Route::post('/payments/{transaction}/approve-manual', [PaymentController::class, 'approveManual'])->middleware('can:payments.verify')->name('payments.approve-manual');
+    Route::post('/payments/{transaction}/reject-manual', [PaymentController::class, 'rejectManual'])->middleware('can:payments.verify')->name('payments.reject-manual');
+
+    // ---- Manual payment methods (bKash / Nagad / Rocket / Upay / QR)
+    Route::resource('payment-methods', PaymentMethodController::class)
+        ->except('show')->middleware('can:payments.methods');
 
     // ---- Settings & website customization
     Route::middleware('can:settings.loan')->group(function () {

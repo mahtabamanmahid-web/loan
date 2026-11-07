@@ -26,6 +26,7 @@
         'Payments' => [
             ['admin.payments.index', 'Payments', 'credit-card', 'payments.view', 'admin.payments.index|admin.payments.show'],
             ['admin.payments.reports', 'Payment Reports', 'chart-column', 'payments.view', 'admin.payments.reports'],
+            ['admin.payment-methods.index', 'Payment Methods', 'wallet', 'payments.methods', 'admin.payment-methods.*'],
         ],
         'Website' => [
             ['admin.settings.website', 'Website Customization', 'palette', 'settings.website', 'admin.settings.website'],

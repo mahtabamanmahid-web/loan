@@ -32,6 +32,7 @@ return [
             'payments.verify' => 'Re-verify payments with gateway',
             'payments.refund' => 'Refund payments',
             'payments.export' => 'Export payment reports',
+            'payments.methods' => 'Manage manual payment methods',
         ],
         'content' => [
             'settings.loan' => 'Loan settings',
@@ -53,7 +54,7 @@ return [
         'manager' => ['name' => 'Manager', 'permissions' => [
             'dashboard.view', 'users.view', 'users.manage', 'kyc.review', 'loans.view', 'loans.review', 'loans.approve',
             'loans.agreement', 'loans.disburse', 'loans.repayments', 'products.manage', 'payments.view', 'payments.verify',
-            'payments.refund', 'payments.export', 'settings.loan', 'settings.website', 'reviews.manage', 'content.manage',
+            'payments.refund', 'payments.export', 'payments.methods', 'settings.loan', 'settings.website', 'reviews.manage', 'content.manage',
             'tickets.manage', 'logs.view',
         ]],
         'loan_officer' => ['name' => 'Loan Officer', 'permissions' => [
@@ -61,7 +62,7 @@ return [
         ]],
         'payment_manager' => ['name' => 'Payment Manager', 'permissions' => [
             'dashboard.view', 'users.view', 'loans.view', 'loans.disburse', 'loans.repayments',
-            'payments.view', 'payments.verify', 'payments.refund', 'payments.export',
+            'payments.view', 'payments.verify', 'payments.refund', 'payments.export', 'payments.methods',
         ]],
         'support_agent' => ['name' => 'Support Agent', 'permissions' => [
             'dashboard.view', 'users.view', 'loans.view', 'payments.view', 'tickets.manage', 'reviews.manage', 'content.manage',

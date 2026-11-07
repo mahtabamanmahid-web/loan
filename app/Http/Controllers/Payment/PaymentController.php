@@ -6,6 +6,7 @@ use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\LoanApplication;
 use App\Models\LoanInstallment;
+use App\Models\PaymentMethod;
 use App\Models\PaymentTransaction;
 use App\Services\PaymentService;
 use Illuminate\Http\RedirectResponse;
@@ -21,13 +22,13 @@ class PaymentController extends Controller
 {
     public function __construct(private PaymentService $payments) {}
 
-    /** Start paying the (disclosed, upfront) processing fee of an approved application. */
+    /** Start paying the disclosed security deposit of an approved application. */
     public function payFee(LoanApplication $application): RedirectResponse
     {
         $this->ensureOwner($application);
         $tx = $this->payments->initiateProcessingFee($application, auth()->user());
 
-        return redirect()->away($tx->payment_url);
+        return $this->sendToPayment($tx);
     }
 
     /** Start paying an installment (full due amount, or a custom partial amount). */
@@ -39,7 +40,47 @@ class PaymentController extends Controller
 
         $tx = $this->payments->initiateInstallment($installment, auth()->user(), $custom);
 
-        return redirect()->away($tx->payment_url);
+        return $this->sendToPayment($tx);
+    }
+
+    /** UddoktaPay → gateway page; manual → our manual payment page. */
+    private function sendToPayment(PaymentTransaction $tx): RedirectResponse
+    {
+        if ($tx->payment_url) {
+            return redirect()->away($tx->payment_url);
+        }
+
+        return redirect()->route('payment.manual', $tx);
+    }
+
+    /** Manual payment page: shows bKash/Nagad/Rocket/Upay numbers + QR and a proof form. */
+    public function manual(PaymentTransaction $transaction): View|RedirectResponse
+    {
+        $this->ensureOwner($transaction);
+        if ($transaction->gateway !== 'manual' || $transaction->processed_at) {
+            return redirect()->route('payment.result', $transaction);
+        }
+
+        return view('user.payments.manual', [
+            'tx' => $transaction,
+            'methods' => PaymentMethod::active()->get(),
+        ]);
+    }
+
+    public function submitManual(Request $request, PaymentTransaction $transaction): RedirectResponse
+    {
+        $this->ensureOwner($transaction);
+        $data = $request->validate([
+            'payment_method' => ['required', 'string', 'max:60'],
+            'sender_number' => ['required', 'regex:/^01[3-9]\d{8}$/'],
+            'trx_id' => ['required', 'string', 'max:60'],
+        ], [
+            'sender_number.regex' => __('Enter a valid 11-digit mobile number (e.g. 01712345678).'),
+        ]);
+
+        $this->payments->submitManualProof($transaction, auth()->user(), $data['payment_method'], $data['sender_number'], $data['trx_id']);
+
+        return redirect()->route('payment.result', $transaction)->with('success', __('Thank you! We will verify your payment shortly.'));
     }
 
     /**

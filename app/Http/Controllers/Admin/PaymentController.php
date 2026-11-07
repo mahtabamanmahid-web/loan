@@ -47,6 +47,22 @@ class PaymentController extends Controller
         return back()->with('success', __('Gateway status: :status', ['status' => $tx->status->label()]));
     }
 
+    /** Confirm a manual (bKash/Nagad/...) payment was really received. */
+    public function approveManual(PaymentTransaction $transaction, PaymentService $payments): RedirectResponse
+    {
+        $payments->approveManual($transaction, auth()->user());
+
+        return back()->with('success', __('Manual payment approved.'));
+    }
+
+    public function rejectManual(Request $request, PaymentTransaction $transaction, PaymentService $payments): RedirectResponse
+    {
+        $data = $request->validate(['reason' => ['required', 'string', 'max:255']]);
+        $payments->rejectManual($transaction, auth()->user(), $data['reason']);
+
+        return back()->with('success', __('Manual payment rejected.'));
+    }
+
     public function refund(Request $request, PaymentTransaction $transaction, PaymentService $payments): RedirectResponse
     {
         $data = $request->validate([

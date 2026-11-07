@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             AdminRoleSeeder::class,
             LoanProductSeeder::class,
             FaqSeeder::class,
+            PaymentMethodSeeder::class,
         ]);
 
         $email = env('ADMIN_EMAIL');

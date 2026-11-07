@@ -55,7 +55,7 @@ class PaymentService
 
         return $this->initiate($user, (float) $app->agreement->processing_fee, 'processing_fee', [
             'loan_application_id' => $app->id,
-            'description' => __('Processing fee for application :ref', ['ref' => $app->reference]),
+            'description' => __('Security deposit for application :ref', ['ref' => $app->reference]),
         ]);
     }
 
@@ -82,6 +82,11 @@ class PaymentService
         ]);
     }
 
+    /**
+     * Create the local transaction. When UddoktaPay is configured it fetches a
+     * checkout URL; otherwise it is left for the customer to pay manually
+     * (bKash / Nagad / Rocket / Upay) and submit proof.
+     */
     private function initiate(User $user, float $amount, string $purpose, array $attributes): PaymentTransaction
     {
         $tx = PaymentTransaction::create(array_merge($attributes, [
@@ -89,10 +94,16 @@ class PaymentService
             'user_id' => $user->id,
             'purpose' => $purpose,
             'amount' => $amount,
+            'gateway' => $this->gateway->isConfigured() ? 'uddoktapay' : 'manual',
             'status' => PaymentStatus::Initiated,
         ]));
 
         $this->log($tx, 'initiated', 'Payment initiated', ['amount' => $amount, 'purpose' => $purpose]);
+
+        // No online gateway configured → customer pays manually and submits proof.
+        if (! $this->gateway->isConfigured()) {
+            return $tx;
+        }
 
         try {
             $charge = $this->gateway->createCharge([
@@ -116,6 +127,82 @@ class PaymentService
         $this->log($tx, 'charge_created', 'Checkout URL received', $charge['raw']);
 
         return $tx;
+    }
+
+    /* ---------------------------------------------------------------- manual payment */
+
+    /**
+     * Customer submits proof that they sent money to a manual method (bKash etc.).
+     * The transaction becomes "pending" until an admin verifies it.
+     */
+    public function submitManualProof(PaymentTransaction $tx, User $user, string $method, string $senderNumber, string $trxId): void
+    {
+        if ($tx->user_id !== $user->id) {
+            throw new LoanWorkflowException(__('Payment not found.'));
+        }
+        if ($tx->gateway !== 'manual' || $tx->processed_at !== null || ! in_array($tx->status, [PaymentStatus::Initiated, PaymentStatus::Pending], true)) {
+            throw new LoanWorkflowException(__('This payment can no longer be updated.'));
+        }
+
+        $tx->update([
+            'status' => PaymentStatus::Pending,
+            'payment_method' => $method,
+            'sender_number' => $senderNumber,
+            'gateway_transaction_id' => $trxId,
+        ]);
+
+        $this->log($tx, 'manual_submitted', 'Customer submitted manual payment proof', [
+            'method' => $method, 'sender' => $senderNumber, 'trx' => $trxId,
+        ]);
+    }
+
+    /** Admin confirms a manual payment was really received. Applies the effect once. */
+    public function approveManual(PaymentTransaction $tx, User $admin): void
+    {
+        DB::transaction(function () use ($tx) {
+            $tx = PaymentTransaction::whereKey($tx->id)->lockForUpdate()->firstOrFail();
+
+            if ($tx->gateway !== 'manual') {
+                throw new LoanWorkflowException(__('This is not a manual payment.'));
+            }
+            if ($tx->processed_at !== null) {
+                return;
+            }
+
+            $tx->forceFill([
+                'status' => PaymentStatus::Completed,
+                'paid_at' => $tx->paid_at ?? now(),
+                'verified_at' => now(),
+                'processed_at' => now(),
+            ])->save();
+
+            $this->applyBusinessEffect($tx);
+            $this->log($tx, 'manual_approved', 'Manual payment approved by admin');
+            ActivityLogger::log('payment.manual_approved', $tx, "Approved manual payment {$tx->reference}");
+
+            DB::afterCommit(fn () => rescue(fn () => $tx->user->notify(new PaymentSuccessful($tx))));
+        });
+    }
+
+    /** Admin rejects a manual payment (wrong/no money received). */
+    public function rejectManual(PaymentTransaction $tx, User $admin, string $reason): void
+    {
+        DB::transaction(function () use ($tx, $reason) {
+            $tx = PaymentTransaction::whereKey($tx->id)->lockForUpdate()->firstOrFail();
+
+            if ($tx->gateway !== 'manual' || $tx->processed_at !== null) {
+                throw new LoanWorkflowException(__('This payment can no longer be updated.'));
+            }
+
+            $tx->forceFill([
+                'status' => PaymentStatus::Failed,
+                'processed_at' => now(),
+                'failure_reason' => Str::limit($reason, 250),
+            ])->save();
+
+            $this->log($tx, 'manual_rejected', $reason, [], 'warning');
+            ActivityLogger::log('payment.manual_rejected', $tx, "Rejected manual payment {$tx->reference}: {$reason}");
+        });
     }
 
     /* ---------------------------------------------------------------- verify */

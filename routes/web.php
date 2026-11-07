@@ -57,6 +57,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 Route::match(['get', 'post'], '/payment/callback', [PaymentController::class, 'callback'])->middleware('throttle:30,1')->name('payment.callback');
 Route::middleware(['auth', 'not.blocked'])->group(function () {
     Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+    Route::get('/payment/manual/{transaction:reference}', [PaymentController::class, 'manual'])->name('payment.manual');
+    Route::post('/payment/manual/{transaction:reference}', [PaymentController::class, 'submitManual'])->middleware('throttle:payments')->name('payment.manual.submit');
     Route::get('/payment/result/{transaction:reference}', [PaymentController::class, 'result'])->name('payment.result');
 });
 

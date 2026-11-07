@@ -5,7 +5,10 @@
 <x-page-header :title="__('Payment').' '.$tx->reference" :subtitle="$tx->user?->name.' · '.$tx->user?->phone" :back="route('admin.payments.index')">
     <x-status-badge :status="$tx->status" size="lg" />
     @can('payments.verify')
-        @if($tx->gateway_invoice_id && ! $tx->processed_at)
+        @if($tx->gateway === 'manual' && $tx->status->value === 'pending' && ! $tx->processed_at)
+            <form method="POST" action="{{ route('admin.payments.approve-manual', $tx) }}" data-confirm="{{ __('Confirm you received this payment?') }}">@csrf<button class="btn btn-success btn-sm"><x-icon name="check" class="h-4 w-4" />{{ __('Approve payment') }}</button></form>
+            <button type="button" @click="$dispatch('open-modal', 'reject-manual')" class="btn btn-outline btn-sm text-rose-600"><x-icon name="x" class="h-4 w-4" />{{ __('Reject') }}</button>
+        @elseif($tx->gateway_invoice_id && ! $tx->processed_at)
             <form method="POST" action="{{ route('admin.payments.verify', $tx) }}">@csrf<button class="btn btn-primary btn-sm"><x-icon name="refresh-cw" class="h-4 w-4" />{{ __('Verify with gateway') }}</button></form>
         @endif
     @endcan
@@ -70,6 +73,14 @@
         </ol>
     </div>
 </div>
+
+<x-modal name="reject-manual" :title="__('Reject payment')">
+    <form method="POST" action="{{ route('admin.payments.reject-manual', $tx) }}" class="space-y-4">
+        @csrf
+        <x-textarea name="reason" :label="__('Reason (why no money was received)')" rows="2" required />
+        <button class="btn btn-danger w-full">{{ __('Reject') }}</button>
+    </form>
+</x-modal>
 
 <x-modal name="refund" :title="__('Refund payment')">
     <form method="POST" action="{{ route('admin.payments.refund', $tx) }}" class="space-y-4" data-confirm="{{ __('Send this refund through UddoktaPay?') }}">
