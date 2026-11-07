@@ -12,7 +12,3 @@ use Illuminate\Support\Facades\Schedule;
 
 // Overdue marking + installment reminders every morning at 9:00 (Asia/Dhaka)
 Schedule::command('loans:reminders')->dailyAt('09:00')->withoutOverlapping();
-
-// Clean expired OTP codes & old password reset tokens
-Schedule::command('model:prune')->daily();
-Schedule::command('auth:clear-resets')->daily();

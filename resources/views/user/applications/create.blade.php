@@ -115,13 +115,10 @@
     {{-- ========== STEP 2: Personal details ========== --}}
     <section data-step="2" x-show="step === 2" x-cloak x-transition.opacity class="card card-pad">
         <h2 class="mb-1 text-lg font-bold">{{ __('Your Details') }}</h2>
-        <p class="mb-6 text-sm text-slate-500">{{ __('Mobile and email are taken from your account.') }}</p>
+        <p class="mb-6 text-sm text-slate-500">{{ __('Your mobile number is taken from your account.') }}</p>
         <div class="grid gap-5 sm:grid-cols-2">
             <x-input name="applicant_name" :label="__('Applicant Name')" icon="user" :value="$user->name" required minlength="3" :hint="__('As written on your NID')" />
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:col-span-1">
-                <div class="field"><label class="label">{{ __('Mobile Number') }}</label><input class="input bg-slate-50 dark:bg-slate-800" value="{{ $user->phone }}" disabled></div>
-                <div class="field"><label class="label">{{ __('Email') }}</label><input class="input bg-slate-50 dark:bg-slate-800" value="{{ $user->email }}" disabled></div>
-            </div>
+            <div class="field"><label class="label">{{ __('Mobile Number') }}</label><input class="input bg-slate-50 dark:bg-slate-800" value="{{ $user->phone }}" disabled></div>
             <x-textarea name="present_address" :label="__('Present Address')" :value="$profile?->present_address" rows="2" required minlength="5" />
             <div x-data="{ same: false }">
                 <x-textarea name="permanent_address" :label="__('Permanent Address')" :value="$profile?->permanent_address" rows="2" required minlength="5" x-ref="perm" />

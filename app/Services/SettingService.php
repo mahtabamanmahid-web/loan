@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\SystemSetting;
 use App\Models\WebsiteSetting;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 /**
@@ -20,6 +19,7 @@ use Throwable;
 class SettingService
 {
     private const WEBSITE_CACHE = 'settings.website';
+
     private const SYSTEM_CACHE = 'settings.system';
 
     /** Defaults used when a key has never been saved. */
@@ -73,7 +73,6 @@ class SettingService
         'maintenance_mode' => '0',
         'maintenance_message' => 'We are upgrading our system. Please check back soon.',
         'registration_enabled' => '1',
-        'otp_enabled' => '1',
     ];
 
     public function website(string $key, mixed $default = null): mixed

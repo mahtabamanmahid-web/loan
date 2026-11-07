@@ -57,9 +57,8 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'regex:/^01[3-9]\d{8}$/', Rule::unique('users')->ignore($user->id)],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'email' => ['nullable', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', Password::defaults()],
-            'phone_verified' => ['nullable', 'boolean'],
         ]);
 
         $changes = array_keys(array_diff_assoc(collect($data)->only('name', 'phone', 'email')->all(), $user->only('name', 'phone', 'email')));
@@ -68,7 +67,6 @@ class UserController extends Controller
             $user->password = $data['password'];
             $changes[] = 'password';
         }
-        $user->phone_verified_at = $request->boolean('phone_verified') ? ($user->phone_verified_at ?? now()) : null;
         $user->save();
 
         ActivityLogger::log('user.updated', $user, "Customer {$user->phone} updated", ['fields' => $changes]);

@@ -34,16 +34,20 @@ class LoginRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['login' => __('Mobile number or email')];
+        return ['login' => __('Mobile Number')];
     }
 
-    /** @param bool $adminOnly true for /admin/login */
+    /**
+     * Customers log in with mobile number only; staff (/admin/login) may also use e-mail.
+     *
+     * @param  bool  $adminOnly  true for /admin/login
+     */
     public function authenticate(bool $adminOnly = false): User
     {
         $this->ensureIsNotRateLimited();
 
         $login = trim((string) $this->input('login'));
-        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        $field = $adminOnly && filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
         $value = $field === 'phone' ? preg_replace('/\D/', '', $login) : Str::lower($login);
         // Accept +8801XXXXXXXXX / 8801XXXXXXXXX as 01XXXXXXXXX
         if ($field === 'phone' && str_starts_with($value, '880')) {
@@ -58,7 +62,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey(), 60);
             $this->record($user?->id, $login, false);
 
-            throw ValidationException::withMessages(['login' => __('Mobile number/email or password is incorrect.')]);
+            throw ValidationException::withMessages(['login' => __('Mobile number or password is incorrect.')]);
         }
 
         if ($user->is_blocked) {

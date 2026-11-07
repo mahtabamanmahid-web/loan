@@ -25,7 +25,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $data = $request->validate([
-            'email' => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($user->id)],
+            'email' => ['nullable', 'email', 'max:150', Rule::unique('users', 'email')->ignore($user->id)],
             'present_address' => ['nullable', 'string', 'max:500'],
             'permanent_address' => ['nullable', 'string', 'max:500'],
             'occupation' => ['nullable', 'string', 'max:100'],
@@ -36,7 +36,7 @@ class ProfileController extends Controller
             'emergency_contact_phone' => ['nullable', 'regex:/^01[3-9]\d{8}$/'],
         ], ['date_of_birth.before' => __('You must be at least 18 years old.')]);
 
-        $user->update(['email' => strtolower($data['email'])]);
+        $user->update(['email' => $data['email'] ? strtolower($data['email']) : null]);
         $user->profile()->updateOrCreate([], collect($data)->except('email')->map(fn ($v) => is_string($v) ? strip_tags($v) : $v)->all());
 
         return back()->with('success', __('Profile updated.'));

@@ -5,12 +5,12 @@
 <div class="mb-8">
     <span class="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary to-secondary text-white shadow-lg shadow-primary/30"><x-icon name="log-in" class="h-7 w-7" /></span>
     <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">{{ __('Log in to your account') }}</h1>
-    <p class="mt-1 text-slate-500">{{ __('Use your mobile number or email and password.') }}</p>
+    <p class="mt-1 text-slate-500">{{ __('Use your mobile number and password.') }}</p>
 </div>
 
 <form method="POST" action="{{ route('login') }}" class="space-y-5">
     @csrf
-    <x-input name="login" :label="__('Mobile number or email')" icon="smartphone" autocomplete="username" inputmode="email" placeholder="01XXXXXXXXX" required autofocus />
+    <x-input name="login" type="tel" :label="__('Mobile Number')" icon="smartphone" autocomplete="tel" inputmode="numeric" maxlength="14" placeholder="01XXXXXXXXX" required autofocus />
     <x-input name="password" type="password" :label="__('Password')" icon="lock" autocomplete="current-password" required />
 
     <div class="flex items-center justify-between">

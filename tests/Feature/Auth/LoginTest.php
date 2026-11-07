@@ -21,11 +21,19 @@ class LoginTest extends TestCase
         $this->assertDatabaseHas('login_histories', ['user_id' => $user->id, 'successful' => true]);
     }
 
-    public function test_customer_can_login_with_email(): void
+    public function test_customer_login_does_not_accept_email(): void
     {
-        $user = User::factory()->create(['email' => 'test@example.com']);
+        User::factory()->create(['email' => 'test@example.com']);
 
-        $this->post('/login', ['login' => 'TEST@example.com', 'password' => 'password1'])->assertRedirect();
+        $this->post('/login', ['login' => 'test@example.com', 'password' => 'password1'])->assertSessionHasErrors('login');
+        $this->assertGuest();
+    }
+
+    public function test_customer_without_email_can_login(): void
+    {
+        $user = User::factory()->create(['phone' => '01722222222', 'email' => null]);
+
+        $this->post('/login', ['login' => '+8801722222222', 'password' => 'password1'])->assertRedirect(route('user.dashboard'));
         $this->assertAuthenticatedAs($user);
     }
 

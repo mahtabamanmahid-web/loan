@@ -126,7 +126,6 @@ class SettingController extends Controller
         $data = $request->validate(['maintenance_message' => ['nullable', 'string', 'max:300']]);
         $data['maintenance_mode'] = $request->boolean('maintenance_mode');
         $data['registration_enabled'] = $request->boolean('registration_enabled');
-        $data['otp_enabled'] = $request->boolean('otp_enabled');
 
         $this->settings->setSystem($data, 'system');
         ActivityLogger::log('settings.system', null, 'System settings updated', $data);

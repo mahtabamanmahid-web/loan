@@ -79,6 +79,17 @@ class PaymentTest extends TestCase
         $this->assertDatabaseHas('payment_logs', ['payment_transaction_id' => $tx->id, 'event' => 'initiated']);
     }
 
+    public function test_customer_without_email_can_start_payment(): void
+    {
+        $loan = $this->activeLoan();
+        $loan->user->update(['email' => null]);
+
+        $this->initiateInstallment($loan->fresh());
+
+        Http::assertSent(fn (Request $r) => str_ends_with($r->url(), '/api/checkout-v2')
+            && filter_var($r['email'], FILTER_VALIDATE_EMAIL) !== false);
+    }
+
     public function test_successful_verification_applies_repayment(): void
     {
         $loan = $this->activeLoan();

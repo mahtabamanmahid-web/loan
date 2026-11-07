@@ -5,7 +5,7 @@
 <div class="mb-8">
     <span class="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary to-secondary text-white shadow-lg shadow-primary/30"><x-icon name="user-plus" class="h-7 w-7" /></span>
     <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">{{ __('Open a free account') }}</h1>
-    <p class="mt-1 text-slate-500">{{ __('It takes 1 minute. We will send a code to verify your mobile.') }}</p>
+    <p class="mt-1 text-slate-500">{{ __('It takes 1 minute. Only your name, mobile number and a password are needed.') }}</p>
 </div>
 
 @if(! $enabled)
@@ -16,7 +16,6 @@
     @csrf
     <x-input name="name" :label="__('Full Name')" icon="user" autocomplete="name" :hint="__('As written on your NID')" required />
     <x-input name="phone" type="tel" :label="__('Mobile Number')" icon="smartphone" autocomplete="tel" inputmode="numeric" maxlength="14" placeholder="01XXXXXXXXX" required />
-    <x-input name="email" type="email" :label="__('Email')" icon="mail" autocomplete="email" required />
     <div>
         <x-input name="password" type="password" :label="__('Password')" icon="lock" autocomplete="new-password" x-model="pw" required />
         {{-- Password strength meter --}}

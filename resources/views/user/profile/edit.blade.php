@@ -34,7 +34,6 @@
             <h3 class="mb-3 font-bold">{{ __('Account Information') }}</h3>
             <dl class="space-y-2 text-sm">
                 <div class="flex justify-between"><dt class="text-slate-500">{{ __('Member since') }}</dt><dd>{{ bn_digits($user->created_at->format('d M Y')) }}</dd></div>
-                <div class="flex justify-between"><dt class="text-slate-500">{{ __('Mobile verified') }}</dt><dd>{{ $user->phone_verified_at ? __('Yes') : __('No') }}</dd></div>
                 <div class="flex justify-between"><dt class="text-slate-500">{{ __('Last login') }}</dt><dd>{{ $user->last_login_at ? bn_digits($user->last_login_at->format('d M, h:i A')) : '—' }}</dd></div>
             </dl>
             <a href="{{ route('user.profile.logins') }}" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary"><x-icon name="history" class="h-4 w-4" />{{ __('Login History') }}</a>
@@ -53,7 +52,7 @@
             <div class="grid gap-5 sm:grid-cols-2">
                 <div class="field"><label class="label">{{ __('Full Name') }}</label><input class="input bg-slate-50 dark:bg-slate-800" value="{{ $user->name }}" disabled><p class="hint">{{ __('Contact support to change your name or mobile.') }}</p></div>
                 <div class="field"><label class="label">{{ __('Mobile Number') }}</label><input class="input bg-slate-50 dark:bg-slate-800" value="{{ $user->phone }}" disabled></div>
-                <x-input name="email" type="email" :label="__('Email')" icon="mail" :value="$user->email" required />
+                <x-input name="email" type="email" :label="__('Email')" icon="mail" :value="$user->email" :hint="__('Optional')" />
                 <x-input name="date_of_birth" type="date" :label="__('Date of Birth')" :value="$p?->date_of_birth?->format('Y-m-d')" />
                 <x-select name="gender" :label="__('Gender')" :options="['' => '—', 'male' => __('Male'), 'female' => __('Female'), 'other' => __('Other')]" :selected="$p?->gender" />
                 <x-input name="occupation" :label="__('Occupation')" icon="briefcase" :value="$p?->occupation" />

@@ -14,9 +14,7 @@
         <x-textarea name="maintenance_message" :label="__('Message shown to visitors')" :value="$s['maintenance_message']" rows="2" />
     </div>
     <div class="card card-pad space-y-4">
-        <label class="flex items-center justify-between gap-4"><span class="font-semibold">{{ __('Allow new registrations') }}</span><input type="checkbox" name="registration_enabled" value="1" class="checkbox h-6 w-6" @checked($s['registration_enabled'] == '1')></label>
-        <label class="flex items-center justify-between gap-4"><span><span class="block font-semibold">{{ __('Require OTP mobile verification') }}</span><span class="text-sm text-slate-500">{{ __('Turn off only if your SMS gateway is not configured yet.') }}</span></span><input type="checkbox" name="otp_enabled" value="1" class="checkbox h-6 w-6" @checked($s['otp_enabled'] == '1')></label>
-    </div>
+        <label class="flex items-center justify-between gap-4"><span class="font-semibold">{{ __('Allow new registrations') }}</span><input type="checkbox" name="registration_enabled" value="1" class="checkbox h-6 w-6" @checked($s['registration_enabled'] == '1')></label>    </div>
     <div class="card card-pad text-sm">
         <h3 class="mb-2 font-bold">{{ __('Environment') }}</h3>
         <dl class="grid grid-cols-2 gap-2">

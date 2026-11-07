@@ -16,7 +16,7 @@
 <ul>
     <li>{{ __('Name') }}: {{ $application->applicant_name }}</li>
     <li>{{ __('Mobile Number') }}: {{ $application->phone }}</li>
-    <li>{{ __('Email') }}: {{ $application->email }}</li>
+    @if($application->email)<li>{{ __('Email') }}: {{ $application->email }}</li>@endif
     <li>{{ __('Present Address') }}: {{ $application->present_address }}</li>
     <li>{{ __('Application Reference') }}: {{ $application->reference }}</li>
 </ul>

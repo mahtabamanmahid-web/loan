@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\OtpController;
-use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\LocaleController;
@@ -43,21 +41,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'show'])->name('register');
     Route::post('/register', [RegisterController::class, 'register'])->middleware('throttle:5,1');
 
-    Route::get('/forgot-password', [PasswordResetController::class, 'request'])->name('password.request');
-    Route::post('/forgot-password', [PasswordResetController::class, 'send'])->middleware('throttle:otp')->name('password.send');
-    Route::get('/reset-password/otp', [PasswordResetController::class, 'otpForm'])->name('password.otp');
-    Route::post('/reset-password/otp', [PasswordResetController::class, 'resetWithOtp'])->middleware('throttle:10,1')->name('password.otp.update');
-    Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetForm'])->name('password.reset');
-    Route::post('/reset-password', [PasswordResetController::class, 'reset'])->middleware('throttle:10,1')->name('password.update');
+    // No e-mail / OTP: the customer contacts support and an admin resets the password.
+    Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-    Route::get('/verify-phone', [OtpController::class, 'show'])->name('otp.show');
-    Route::post('/verify-phone', [OtpController::class, 'verify'])->middleware('throttle:10,1')->name('otp.verify');
-    Route::post('/verify-phone/resend', [OtpController::class, 'resend'])->middleware('throttle:otp')->name('otp.resend');
-});
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -77,7 +65,7 @@ Route::middleware(['auth', 'not.blocked'])->group(function () {
 | Customer panel
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'not.blocked', 'customer', 'phone.verified'])->name('user.')->group(function () {
+Route::middleware(['auth', 'not.blocked', 'customer'])->name('user.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Loan application wizard + status

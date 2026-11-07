@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\DocumentStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -43,15 +44,50 @@ class User extends Authenticatable
 
     /* ---------------- Relationships ---------------- */
 
-    public function profile(): HasOne { return $this->hasOne(UserProfile::class); }
-    public function documents(): HasMany { return $this->hasMany(UserDocument::class)->latest(); }
-    public function latestDocument(): HasOne { return $this->hasOne(UserDocument::class)->latestOfMany(); }
-    public function applications(): HasMany { return $this->hasMany(LoanApplication::class)->latest(); }
-    public function loans(): HasMany { return $this->hasMany(Loan::class)->latest(); }
-    public function transactions(): HasMany { return $this->hasMany(PaymentTransaction::class)->latest(); }
-    public function tickets(): HasMany { return $this->hasMany(SupportTicket::class)->latest(); }
-    public function loginHistories(): HasMany { return $this->hasMany(LoginHistory::class)->latest('created_at'); }
-    public function adminRole(): BelongsTo { return $this->belongsTo(AdminRole::class); }
+    public function profile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(UserDocument::class)->latest();
+    }
+
+    public function latestDocument(): HasOne
+    {
+        return $this->hasOne(UserDocument::class)->latestOfMany();
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(LoanApplication::class)->latest();
+    }
+
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class)->latest();
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(PaymentTransaction::class)->latest();
+    }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class)->latest();
+    }
+
+    public function loginHistories(): HasMany
+    {
+        return $this->hasMany(LoginHistory::class)->latest('created_at');
+    }
+
+    public function adminRole(): BelongsTo
+    {
+        return $this->belongsTo(AdminRole::class);
+    }
 
     /* ---------------- Helpers ---------------- */
 
@@ -75,11 +111,6 @@ class User extends Authenticatable
         return $this->isSuperAdmin() || $this->adminRole->hasPermission($permission);
     }
 
-    public function isPhoneVerified(): bool
-    {
-        return $this->phone_verified_at !== null;
-    }
-
     public function nidStatus(): ?string
     {
         return $this->latestDocument?->status?->value;
@@ -87,7 +118,7 @@ class User extends Authenticatable
 
     public function isKycApproved(): bool
     {
-        return $this->latestDocument?->status === \App\Enums\DocumentStatus::Approved;
+        return $this->latestDocument?->status === DocumentStatus::Approved;
     }
 
     public function hasOpenApplication(): bool
@@ -110,12 +141,6 @@ class User extends Authenticatable
         $prefs = array_merge(['email' => true, 'sms' => true], $this->notification_preferences ?? []);
 
         return (bool) ($prefs[$channel] ?? true);
-    }
-
-    /** Password reset e-mail with our own branded template. */
-    public function sendPasswordResetNotification($token): void
-    {
-        $this->notify(new \App\Notifications\ResetPasswordLink($token));
     }
 
     /** Used by the SMS channel. */

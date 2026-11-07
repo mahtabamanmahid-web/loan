@@ -9,7 +9,7 @@
 <table class="kv">
     <tr><td>Name</td><td>{{ $application->applicant_name }}</td></tr>
     <tr><td>Mobile</td><td>{{ $application->phone }}</td></tr>
-    <tr><td>Email</td><td>{{ $application->email }}</td></tr>
+    @if($application->email)<tr><td>Email</td><td>{{ $application->email }}</td></tr>@endif
     <tr><td>Present address</td><td>{{ $application->present_address }}</td></tr>
     <tr><td>Permanent address</td><td>{{ $application->permanent_address }}</td></tr>
     <tr><td>Occupation</td><td>{{ $application->occupation }}</td></tr>

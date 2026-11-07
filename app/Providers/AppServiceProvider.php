@@ -44,11 +44,6 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureRateLimiting(): void
     {
-        RateLimiter::for('otp', fn (Request $r) => [
-            Limit::perMinute(1)->by('otp-min:'.($r->user()?->id ?? $r->ip())),
-            Limit::perHour(6)->by('otp-hour:'.($r->user()?->id ?? $r->ip())),
-        ]);
-
         RateLimiter::for('payments', fn (Request $r) => Limit::perMinute(6)->by('pay:'.($r->user()?->id ?? $r->ip())));
 
         RateLimiter::for('webhook', fn (Request $r) => Limit::perMinute(60)->by('hook:'.$r->ip()));

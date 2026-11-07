@@ -16,7 +16,7 @@
         @forelse($users as $u)
             <tr>
                 <td><div class="flex items-center gap-3"><img src="{{ $u->avatarUrl() }}" class="h-9 w-9 rounded-lg" alt=""><div><p class="font-semibold">{{ $u->name }} @if($u->is_blocked)<x-badge color="rose">{{ __('Blocked') }}</x-badge>@endif</p><p class="text-xs text-slate-500">{{ $u->email }}</p></div></div></td>
-                <td>{{ $u->phone }} @unless($u->phone_verified_at)<x-badge color="amber">{{ __('Unverified') }}</x-badge>@endunless</td>
+                <td>{{ $u->phone }}</td>
                 <td>@if($u->latestDocument)<x-status-badge :status="$u->latestDocument->status" />@else<span class="text-slate-400">—</span>@endif</td>
                 <td>{{ $u->applications_count }}</td>
                 <td>{{ $u->loans_count }}</td>

@@ -6,7 +6,6 @@ use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\EnsureCustomer;
 use App\Http\Middleware\EnsureNotBlocked;
-use App\Http\Middleware\EnsurePhoneVerified;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -37,7 +36,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => EnsureAdmin::class,
             'customer' => EnsureCustomer::class,
             'not.blocked' => EnsureNotBlocked::class,
-            'phone.verified' => EnsurePhoneVerified::class,
         ]);
 
         // UddoktaPay may redirect back with POST; the request is verified server-side anyway.

@@ -30,7 +30,7 @@
                 @foreach([
                     __('Applicant Name') => $application->applicant_name,
                     __('Mobile Number') => $application->phone,
-                    __('Email') => $application->email,
+                    __('Email') => $application->email ?: '—',
                     __('Occupation') => $application->occupation,
                     __('Monthly Income') => money_plain($application->monthly_income),
                     __('Loan Purpose') => $application->purpose,

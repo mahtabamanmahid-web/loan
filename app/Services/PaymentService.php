@@ -13,6 +13,7 @@ use App\Models\PaymentLog;
 use App\Models\PaymentTransaction;
 use App\Models\User;
 use App\Notifications\PaymentSuccessful;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Throwable;
@@ -96,7 +97,8 @@ class PaymentService
         try {
             $charge = $this->gateway->createCharge([
                 'full_name' => $user->name,
-                'email' => $user->email,
+                // UddoktaPay requires an e-mail; customers may not have one.
+                'email' => $user->email ?: (setting('support_email') ?: 'customer'.$user->id.'@example.com'),
                 'amount' => $amount,
                 // Our reference travels through the gateway and comes back on verify
                 'metadata' => ['reference' => $tx->reference, 'user_id' => (string) $user->id, 'purpose' => $purpose],
@@ -203,7 +205,7 @@ class PaymentService
 
                 $tx->gateway_transaction_id = $trxId;
                 $tx->status = PaymentStatus::Completed;
-                $tx->paid_at = isset($data['date']) ? rescue(fn () => \Illuminate\Support\Carbon::parse($data['date']), now(), false) : now();
+                $tx->paid_at = isset($data['date']) ? rescue(fn () => Carbon::parse($data['date']), now(), false) : now();
                 $tx->processed_at = now();
                 $tx->save();
 

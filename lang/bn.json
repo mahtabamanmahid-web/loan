@@ -1037,5 +1037,14 @@
     "shown before you sign": "স্বাক্ষরের আগেই দেখানো হয়",
     "signed – ready to disburse": "স্বাক্ষরিত – বিতরণের জন্য প্রস্তুত",
     "users": "জন ব্যবহারকারী",
-    "weekly": "সাপ্তাহিক"
+    "weekly": "সাপ্তাহিক",
+    "Call": "কল করুন",
+    "Contact our support team with your registered mobile number. After checking your identity, we will set a new password for you.": "আপনার নিবন্ধিত মোবাইল নম্বর নিয়ে আমাদের সাপোর্টে যোগাযোগ করুন। পরিচয় যাচাই করে আমরা আপনার জন্য নতুন পাসওয়ার্ড সেট করে দেব।",
+    "Please contact our office to reset your password.": "পাসওয়ার্ড রিসেট করতে আমাদের অফিসে যোগাযোগ করুন।",
+    "We will never ask for your password. Never share it with anyone.": "আমরা কখনো আপনার পাসওয়ার্ড চাইব না। কাউকে পাসওয়ার্ড দেবেন না।",
+    "Use your mobile number and password.": "আপনার মোবাইল নম্বর ও পাসওয়ার্ড দিন।",
+    "It takes 1 minute. Only your name, mobile number and a password are needed.": "মাত্র ১ মিনিট লাগবে। শুধু নাম, মোবাইল নম্বর ও একটি পাসওয়ার্ড দরকার।",
+    "Mobile number or password is incorrect.": "মোবাইল নম্বর অথবা পাসওয়ার্ড ভুল।",
+    "Your mobile number is taken from your account.": "মোবাইল নম্বর আপনার অ্যাকাউন্ট থেকে নেওয়া হয়েছে।",
+    "Use this when a customer forgot the password. Leave empty to keep the current password.": "গ্রাহক পাসওয়ার্ড ভুলে গেলে এখানে নতুন পাসওয়ার্ড দিন। বর্তমান পাসওয়ার্ড রাখতে খালি রাখুন।"
 }

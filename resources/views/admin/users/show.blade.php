@@ -2,7 +2,7 @@
 @section('title', $user->name)
 
 @section('content')
-<x-page-header :title="$user->name" :subtitle="$user->phone.' · '.$user->email" :back="route('admin.users.index')">
+<x-page-header :title="$user->name" :subtitle="$user->phone.($user->email ? ' · '.$user->email : '')" :back="route('admin.users.index')">
     @can('users.manage')
         <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-outline btn-sm"><x-icon name="pencil" class="h-4 w-4" />{{ __('Edit') }}</a>
         @if($user->is_blocked)
@@ -22,7 +22,7 @@
             <dl class="mt-5 space-y-2 text-sm">
                 @php($p = $user->profile)
                 @foreach([
-                    __('Mobile') => $user->phone.($user->phone_verified_at ? ' ✓' : ''),
+                    __('Mobile') => $user->phone,
                     __('Email') => $user->email,
                     __('Occupation') => $p?->occupation,
                     __('Monthly Income') => $p?->monthly_income ? money_plain($p->monthly_income) : null,
