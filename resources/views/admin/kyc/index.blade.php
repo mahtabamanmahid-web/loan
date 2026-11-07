@@ -17,7 +17,7 @@
         @forelse($documents as $d)
             <tr>
                 <td><p class="font-semibold">{{ $d->user->name }}</p><p class="text-xs text-slate-500">{{ $d->user->phone }}</p></td>
-                <td class="font-mono">{{ $d->maskedNid() }}</td>
+                <td>{{ __('NID photo') }}</td>
                 <td>{{ $d->created_at->format('d M Y, h:i A') }}</td>
                 <td><x-status-badge :status="$d->status" /></td>
                 <td>{{ $d->reviewer?->name ?? '—' }}</td>

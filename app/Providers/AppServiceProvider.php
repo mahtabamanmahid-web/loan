@@ -24,10 +24,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useTailwind();
 
-        // Strong password rules everywhere: Password::defaults()
-        Password::defaults(fn () => app()->isProduction()
-            ? Password::min(8)->letters()->numbers()->uncompromised()
-            : Password::min(8)->letters()->numbers());
+        // Password rule: minimum 6 characters, nothing else required
+        // (simple codes such as 123456 are accepted, per the project owner's request).
+        Password::defaults(fn () => Password::min(6));
 
         // RBAC: any ability that looks like "group.action" is an admin permission.
         // Enables ->middleware('can:loans.approve') and @can('loans.approve').

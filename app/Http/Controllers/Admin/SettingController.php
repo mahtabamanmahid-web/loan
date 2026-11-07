@@ -39,7 +39,6 @@ class SettingController extends Controller
             'lender_legal_name' => ['nullable', 'string', 'max:150'],
             'lender_license_number' => ['nullable', 'string', 'max:100'],
         ]);
-        $data['require_nid_before_apply'] = $request->boolean('require_nid_before_apply');
         $data['require_selfie'] = $request->boolean('require_selfie');
 
         $this->settings->setSystem($data, 'loan');

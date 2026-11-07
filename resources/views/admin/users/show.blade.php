@@ -41,7 +41,7 @@
             <h3 class="mb-3 font-bold">{{ __('NID Verification') }}</h3>
             @forelse($user->documents as $d)
                 <a href="{{ route('admin.kyc.show', $d) }}" class="mb-2 flex items-center justify-between rounded-xl border border-slate-100 p-3 text-sm hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
-                    <span>{{ $d->maskedNid() }} · {{ $d->created_at->format('d M Y') }}</span><x-status-badge :status="$d->status" />
+                    <span>{{ __('NID photo') }} · {{ $d->created_at->format('d M Y') }}</span><x-status-badge :status="$d->status" />
                 </a>
             @empty
                 <p class="text-sm text-slate-500">{{ __('No NID submitted.') }}</p>

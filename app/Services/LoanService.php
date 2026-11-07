@@ -61,12 +61,7 @@ class LoanService
         $application = DB::transaction(function () use ($user, $product, $term, $calc, $applicant, $ip) {
             // Keep the customer's profile in sync with the latest information
             $user->profile()->updateOrCreate([], [
-                'present_address' => $applicant['present_address'],
-                'permanent_address' => $applicant['permanent_address'],
-                'occupation' => $applicant['occupation'],
-                'monthly_income' => $applicant['monthly_income'],
-                'emergency_contact_name' => $applicant['emergency_contact_name'] ?? null,
-                'emergency_contact_phone' => $applicant['emergency_contact_phone'] ?? null,
+                'occupation' => $applicant['occupation'] ?? null,
             ]);
 
             return LoanApplication::create([
@@ -75,8 +70,7 @@ class LoanService
                 'loan_product_id' => $product->id,
                 'loan_term_id' => $term->id,
                 ...collect($applicant)->only([
-                    'applicant_name', 'phone', 'email', 'present_address', 'permanent_address', 'occupation',
-                    'monthly_income', 'purpose', 'emergency_contact_name', 'emergency_contact_phone',
+                    'applicant_name', 'phone', 'email', 'occupation', 'purpose',
                 ])->all(),
                 'requested_amount' => $calc['amount'],
                 'requested_months' => $calc['months'],

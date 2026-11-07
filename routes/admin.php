@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\LoanController;
 use App\Http\Controllers\Admin\LoanProductController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -36,6 +37,11 @@ Route::middleware(['auth', 'admin', 'not.blocked'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Every admin can manage their own account (no special permission needed)
+    Route::get('/my-account', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/my-account', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/my-account/password', [ProfileController::class, 'password'])->name('profile.password');
 
     // ---- Customers & KYC
     Route::middleware('can:users.view')->group(function () {

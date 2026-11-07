@@ -12,47 +12,39 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 /**
- * NID / KYC handling.
- * Files are saved on the "local" disk (storage/app/private) under kyc/{user_id}/
- * with random file names. They are NEVER reachable through a public URL – admins
- * view them through an authorised streaming route.
+ * NID / KYC handling (photo only – no NID number is collected).
+ *
+ * Images are downsized and re-compressed before being saved on the private "local"
+ * disk (storage/app/private) under kyc/{user_id}/ with random names, so they stay
+ * small and never fill up hosting storage. They are NEVER reachable through a public
+ * URL – admins view them through an authorised streaming route.
  */
 class KycService
 {
     public const DISK = 'local';
 
-    public function submit(User $user, string $nid, UploadedFile $front, UploadedFile $back, ?UploadedFile $selfie): UserDocument
+    /** Photos are scaled down to at most this width/height (px) to save storage. */
+    private const MAX_DIMENSION = 1000;
+
+    public function submit(User $user, UploadedFile $front, UploadedFile $back, ?UploadedFile $selfie): UserDocument
     {
-        $nid = preg_replace('/\D/', '', $nid);
-        $hash = UserDocument::hashNid($nid);
-
-        // Same NID cannot be used by two different accounts (duplicate account prevention)
-        $usedByOther = UserDocument::where('nid_hash', $hash)->where('user_id', '!=', $user->id)
-            ->whereIn('status', [DocumentStatus::Pending->value, DocumentStatus::Approved->value])->exists();
-        if ($usedByOther) {
-            throw ValidationException::withMessages(['nid_number' => __('This NID is already registered with another account.')]);
-        }
-
         $latest = $user->latestDocument;
         if ($latest && in_array($latest->status, [DocumentStatus::Pending, DocumentStatus::Approved], true)) {
-            throw ValidationException::withMessages(['nid_number' => __('Your NID is already submitted. Please wait for the review result.')]);
+            throw ValidationException::withMessages(['nid_front' => __('Your NID is already submitted. Please wait for the review result.')]);
         }
 
         $dir = 'kyc/'.$user->id;
 
-        return DB::transaction(function () use ($user, $nid, $hash, $front, $back, $selfie, $dir) {
-            $doc = $user->documents()->create([
-                'nid_number' => $nid,
-                'nid_hash' => $hash,
+        return DB::transaction(function () use ($user, $front, $back, $selfie, $dir) {
+            return $user->documents()->create([
                 'front_image_path' => $this->store($front, $dir),
                 'back_image_path' => $this->store($back, $dir),
                 'selfie_path' => $selfie ? $this->store($selfie, $dir) : null,
                 'status' => DocumentStatus::Pending,
             ]);
-
-            return $doc;
         });
     }
 
@@ -77,11 +69,55 @@ class KycService
         $doc->user->notify(new KycStatusChanged($doc));
     }
 
+    /** Store a photo with a random name, downsized and compressed when GD is available. */
     private function store(UploadedFile $file, string $dir): string
     {
-        // Random name + server-detected extension (never trust the client file name)
-        $name = Str::random(40).'.'.$file->guessExtension();
+        $compressed = $this->compress($file);
 
-        return Storage::disk(self::DISK)->putFileAs($dir, $file, $name);
+        if ($compressed !== null) {
+            $path = $dir.'/'.Str::random(40).'.jpg';
+            Storage::disk(self::DISK)->put($path, $compressed);
+
+            return $path;
+        }
+
+        // Fallback: store the original (server-detected extension, never the client name)
+        return Storage::disk(self::DISK)->putFileAs($dir, $file, Str::random(40).'.'.$file->guessExtension());
+    }
+
+    /** Return downsized JPEG bytes, or null if GD is unavailable / the file is not an image. */
+    private function compress(UploadedFile $file): ?string
+    {
+        if (! function_exists('imagecreatefromstring')) {
+            return null;
+        }
+
+        try {
+            $image = @imagecreatefromstring((string) file_get_contents($file->getRealPath()));
+            if ($image === false) {
+                return null;
+            }
+
+            $width = imagesx($image);
+            $height = imagesy($image);
+            $scale = min(1, self::MAX_DIMENSION / max($width, $height));
+
+            if ($scale < 1) {
+                $resized = imagescale($image, (int) round($width * $scale), (int) round($height * $scale));
+                if ($resized !== false) {
+                    imagedestroy($image);
+                    $image = $resized;
+                }
+            }
+
+            ob_start();
+            imagejpeg($image, null, 70);
+            $bytes = ob_get_clean();
+            imagedestroy($image);
+
+            return $bytes ?: null;
+        } catch (Throwable) {
+            return null;
+        }
     }
 }

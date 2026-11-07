@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Enums\ApplicationStatus;
-use App\Enums\DocumentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreLoanApplicationRequest;
 use App\Models\LoanApplication;
@@ -39,15 +38,7 @@ class ApplicationController extends Controller
                 ->with('info', __('You already have an application in progress.'));
         }
 
-        // NID must be submitted first (pending or approved)
-        $doc = $user->latestDocument;
-        if (sys_setting('require_nid_before_apply') == '1'
-            && (! $doc || ! in_array($doc->status, [DocumentStatus::Pending, DocumentStatus::Approved], true))) {
-            $request->session()->put('kyc_return', $request->fullUrl());
-
-            return redirect()->route('user.kyc.show')->with('info', __('Please verify your NID first. It takes 2 minutes.'));
-        }
-
+        // NID is collected AFTER the loan application is submitted (not before).
         $products = $catalog->forCalculator();
 
         return view('user.applications.create', [

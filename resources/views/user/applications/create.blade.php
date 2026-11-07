@@ -11,10 +11,12 @@
 
 @php
     $profile = $user->profile;
+    $occupations = config('loan_options.occupations');
+    $purposes = config('loan_options.purposes');
     // Jump to the step that contains the first validation error
     $errorStep = 1;
-    if ($errors->hasAny(['applicant_name', 'present_address', 'permanent_address', 'occupation', 'monthly_income', 'purpose', 'emergency_contact_name', 'emergency_contact_phone'])) { $errorStep = 2; }
-    if ($errors->hasAny(['accept_terms', 'accept_fees', 'confirm_info'])) { $errorStep = 4; }
+    if ($errors->hasAny(['applicant_name', 'occupation', 'purpose'])) { $errorStep = 2; }
+    if ($errors->hasAny(['accept_terms'])) { $errorStep = 4; }
     if ($errors->hasAny(['loan_product_id', 'loan_term_id', 'amount'])) { $errorStep = 1; }
 @endphp
 
@@ -112,25 +114,19 @@
         </div>
     </section>
 
-    {{-- ========== STEP 2: Personal details ========== --}}
+    {{-- ========== STEP 2: Applicant details (name, occupation, loan reason only) ========== --}}
     <section data-step="2" x-show="step === 2" x-cloak x-transition.opacity class="card card-pad">
         <h2 class="mb-1 text-lg font-bold">{{ __('Your Details') }}</h2>
         <p class="mb-6 text-sm text-slate-500">{{ __('Your mobile number is taken from your account.') }}</p>
         <div class="grid gap-5 sm:grid-cols-2">
-            <x-input name="applicant_name" :label="__('Applicant Name')" icon="user" :value="$user->name" required minlength="3" :hint="__('As written on your NID')" />
+            <x-input name="applicant_name" :label="__('Applicant Name')" icon="user" :value="old('applicant_name', $user->name)" required minlength="3" />
             <div class="field"><label class="label">{{ __('Mobile Number') }}</label><input class="input bg-slate-50 dark:bg-slate-800" value="{{ $user->phone }}" disabled></div>
-            <x-textarea name="present_address" :label="__('Present Address')" :value="$profile?->present_address" rows="2" required minlength="5" />
-            <div x-data="{ same: false }">
-                <x-textarea name="permanent_address" :label="__('Permanent Address')" :value="$profile?->permanent_address" rows="2" required minlength="5" x-ref="perm" />
-                <label class="mt-2 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                    <input type="checkbox" class="checkbox" x-model="same" @change="if (same) $refs.perm.value = document.getElementById('present_address').value"> {{ __('Same as present address') }}
-                </label>
-            </div>
-            <x-input name="occupation" :label="__('Occupation')" icon="briefcase" :value="$profile?->occupation" required :placeholder="__('e.g. Shop owner, Teacher')" />
-            <x-input name="monthly_income" type="number" :label="__('Monthly Income (৳)')" icon="banknote" :value="$profile?->monthly_income ? (int) $profile->monthly_income : null" min="0" required inputmode="numeric" />
-            <div class="sm:col-span-2"><x-textarea name="purpose" :label="__('Loan Purpose')" rows="2" required minlength="3" :placeholder="__('What will you use the money for?')" /></div>
-            <x-input name="emergency_contact_name" :label="__('Emergency Contact Name')" icon="user-round" :value="$profile?->emergency_contact_name" :hint="__('Optional')" />
-            <x-input name="emergency_contact_phone" type="tel" :label="__('Emergency Contact Mobile')" icon="phone" :value="$profile?->emergency_contact_phone" pattern="01[3-9][0-9]{8}" inputmode="numeric" :hint="__('Optional')" />
+            <x-select name="occupation" :label="__('Occupation')" required :placeholder="__('Select')"
+                      :selected="old('occupation', $profile?->occupation)"
+                      :options="collect($occupations)->mapWithKeys(fn ($l, $k) => [$k => __($l)])->all()" />
+            <x-select name="purpose" :label="__('Loan Purpose')" required :placeholder="__('Select')"
+                      :selected="old('purpose')"
+                      :options="collect($purposes)->mapWithKeys(fn ($l, $k) => [$k => __($l)])->all()" />
         </div>
     </section>
 
@@ -159,7 +155,7 @@
             @foreach($disclosures as $id => $p)
                 <div x-show="productId == {{ $id }}" class="space-y-3 text-sm">
                     <div class="grid gap-3 sm:grid-cols-2">
-                        <div class="rounded-xl bg-slate-50 p-3.5 dark:bg-slate-800"><p class="text-slate-500">{{ __('Processing fee') }}</p><p class="font-bold" x-text="money(result.fee) + ' ({{ bn_digits($p->feeLabel()) }})'"></p></div>
+                        <div class="rounded-xl bg-slate-50 p-3.5 dark:bg-slate-800"><p class="text-slate-500">{{ __('Security deposit') }}</p><p class="font-bold" x-text="money(result.fee) + ' ({{ bn_digits($p->feeLabel()) }})'"></p></div>
                         <div class="rounded-xl bg-slate-50 p-3.5 dark:bg-slate-800"><p class="text-slate-500">{{ __('How the fee is collected') }}</p><p class="font-bold">{{ $p->fee_collection === 'deduct' ? __('Deducted from the disbursed amount') : __('Paid online after approval, before disbursement') }}</p></div>
                         <div class="rounded-xl bg-slate-50 p-3.5 dark:bg-slate-800"><p class="text-slate-500">{{ __('Refundable?') }}</p><p class="font-bold">{{ $p->fee_refundable ? __('Yes') : __('No') }}</p></div>
                         <div class="rounded-xl bg-slate-50 p-3.5 dark:bg-slate-800"><p class="text-slate-500">{{ __('Paid to') }}</p><p class="font-bold">{{ sys_setting('lender_legal_name') ?: site_name() }}</p></div>
@@ -169,17 +165,11 @@
                     @if((float) $p->late_fee_per_installment > 0)<p><strong>{{ __('Late fee per installment') }}:</strong> {{ money($p->late_fee_per_installment) }} ({{ __(':days days grace', ['days' => bn_digits($p->grace_days)]) }})</p>@endif
                 </div>
             @endforeach
-            <x-alert type="info" class="mt-5">{{ __('Nothing is charged now. Paying any fee never guarantees approval. We never ask for a security deposit.') }}</x-alert>
+            <x-alert type="info" class="mt-5">{{ __('Nothing is charged now. The refundable security deposit is collected only after your loan is approved and you accept the agreement.') }}</x-alert>
             <a href="{{ route('loan-terms') }}" target="_blank" class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary">{{ __('Read full fee & terms disclosure') }}<x-icon name="external-link" class="h-3.5 w-3.5" /></a>
         </div>
 
         <div class="card card-pad space-y-4">
-            @foreach([
-                'confirm_info' => __('I confirm that all the information I provided is true and correct.'),
-                'accept_fees' => __('I have read and understood the interest, fees and total repayment amount.'),
-            ] as $field => $text)
-                <label class="field flex items-start gap-3 text-sm"><input type="checkbox" name="{{ $field }}" value="1" class="checkbox mt-0.5" required @checked(old($field))><span>{{ $text }}</span></label>
-            @endforeach
             <label class="field flex items-start gap-3 text-sm">
                 <input type="checkbox" name="accept_terms" value="1" class="checkbox mt-0.5" required @checked(old('accept_terms'))>
                 <span>{!! __('I agree to the :terms and :privacy.', [

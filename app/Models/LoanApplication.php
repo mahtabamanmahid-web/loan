@@ -41,13 +41,40 @@ class LoanApplication extends Model
         ];
     }
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function product(): BelongsTo { return $this->belongsTo(LoanProduct::class, 'loan_product_id'); }
-    public function term(): BelongsTo { return $this->belongsTo(LoanTerm::class, 'loan_term_id'); }
-    public function reviewer(): BelongsTo { return $this->belongsTo(User::class, 'reviewed_by'); }
-    public function agreement(): HasOne { return $this->hasOne(LoanAgreement::class); }
-    public function loan(): HasOne { return $this->hasOne(Loan::class); }
-    public function payments(): HasMany { return $this->hasMany(PaymentTransaction::class)->latest(); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(LoanProduct::class, 'loan_product_id');
+    }
+
+    public function term(): BelongsTo
+    {
+        return $this->belongsTo(LoanTerm::class, 'loan_term_id');
+    }
+
+    public function reviewer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    public function agreement(): HasOne
+    {
+        return $this->hasOne(LoanAgreement::class);
+    }
+
+    public function loan(): HasOne
+    {
+        return $this->hasOne(Loan::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(PaymentTransaction::class)->latest();
+    }
 
     public function scopeSearch(Builder $q, ?string $term): Builder
     {
@@ -63,10 +90,37 @@ class LoanApplication extends Model
         });
     }
 
+    /** Translated occupation label (occupation stores a key such as "business"). */
+    public function occupationLabel(): string
+    {
+        $label = config('loan_options.occupations')[$this->occupation] ?? $this->occupation;
+
+        return $label ? __($label) : '—';
+    }
+
+    /** Translated loan-reason label (purpose stores a key such as "home"). */
+    public function purposeLabel(): string
+    {
+        $label = config('loan_options.purposes')[$this->purpose] ?? $this->purpose;
+
+        return $label ? __($label) : '—';
+    }
+
     /* Final figures: approved values when set, otherwise requested values. */
-    public function finalAmount(): float { return (float) ($this->approved_amount ?? $this->requested_amount); }
-    public function finalMonths(): int { return (int) ($this->approved_months ?? $this->requested_months); }
-    public function finalRate(): float { return (float) ($this->approved_interest_rate ?? $this->interest_rate); }
+    public function finalAmount(): float
+    {
+        return (float) ($this->approved_amount ?? $this->requested_amount);
+    }
+
+    public function finalMonths(): int
+    {
+        return (int) ($this->approved_months ?? $this->requested_months);
+    }
+
+    public function finalRate(): float
+    {
+        return (float) ($this->approved_interest_rate ?? $this->interest_rate);
+    }
 
     /** Has the (upfront) processing fee been paid successfully? */
     public function isFeePaid(): bool

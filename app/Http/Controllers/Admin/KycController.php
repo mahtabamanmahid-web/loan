@@ -32,8 +32,6 @@ class KycController extends Controller
     {
         return view('admin.kyc.show', [
             'document' => $document->load('user.profile', 'reviewer'),
-            // Other documents with the same NID (possible duplicate accounts)
-            'duplicates' => UserDocument::where('nid_hash', $document->nid_hash)->whereKeyNot($document->id)->with('user')->get(),
         ]);
     }
 

@@ -72,6 +72,9 @@
             @endforeach
         </nav>
         <div class="border-t border-white/5 p-3">
+            <a href="{{ route('admin.profile.edit') }}" class="mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {{ request()->routeIs('admin.profile.*') ? 'bg-gradient-to-r from-primary to-secondary text-white' : 'hover:bg-white/5 hover:text-white' }}">
+                <x-icon name="user-cog" class="h-[18px] w-[18px]" />{{ __('My Account') }}
+            </a>
             <div class="mb-2 flex items-center gap-3 px-2">
                 <img src="{{ $admin->avatarUrl() }}" class="h-9 w-9 rounded-lg" alt="">
                 <div class="min-w-0"><p class="truncate text-sm font-semibold text-white">{{ $admin->name }}</p><p class="truncate text-xs text-slate-500">{{ $admin->adminRole?->name }}</p></div>

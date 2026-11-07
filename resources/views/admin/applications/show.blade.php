@@ -30,13 +30,8 @@
                 @foreach([
                     __('Applicant Name') => $application->applicant_name,
                     __('Mobile Number') => $application->phone,
-                    __('Email') => $application->email ?: '—',
-                    __('Occupation') => $application->occupation,
-                    __('Monthly Income') => money_plain($application->monthly_income),
-                    __('Loan Purpose') => $application->purpose,
-                    __('Present Address') => $application->present_address,
-                    __('Permanent Address') => $application->permanent_address,
-                    __('Emergency Contact') => trim($application->emergency_contact_name.' '.$application->emergency_contact_phone) ?: '—',
+                    __('Occupation') => $application->occupationLabel(),
+                    __('Loan Purpose') => $application->purposeLabel(),
                     __('Terms accepted') => $application->terms_accepted_at?->format('d M Y, h:i A').' · '.$application->terms_accepted_ip,
                 ] as $k => $v)
                     <div><dt class="text-slate-500">{{ $k }}</dt><dd class="font-medium">{{ $v }}</dd></div>

@@ -10,9 +10,11 @@ use Tests\TestCase;
 
 class LoanApplicationTest extends TestCase
 {
-    public function test_customer_without_nid_is_sent_to_kyc_page(): void
+    public function test_customer_without_nid_can_open_apply_page(): void
     {
-        $this->actingAs($this->customer(kyc: false))->get('/apply')->assertRedirect(route('user.kyc.show'));
+        // NID is collected AFTER applying, so the page must open without it.
+        $this->product();
+        $this->actingAs($this->customer(kyc: false))->get('/apply')->assertOk()->assertSee('applyWizard');
     }
 
     public function test_wizard_renders_for_verified_customer(): void
@@ -33,17 +35,16 @@ class LoanApplicationTest extends TestCase
         $this->assertSame($user->id, $app->user_id);
         $this->assertSame(ApplicationStatus::Submitted, $app->status);
         $this->assertEquals(21200, (float) $app->total_payable);
-        $this->assertEquals(400, (float) $app->processing_fee);
+        $this->assertEquals(400, (float) $app->processing_fee);   // test factory uses 2% of 20,000
         $this->assertMatchesRegularExpression('/^APP-\d{6}-[A-Z0-9]{6}$/', $app->reference);
-        // Address is encrypted at rest
-        $this->assertStringNotContainsString('Dhaka', (string) \DB::table('loan_applications')->value('present_address'));
+        $this->assertSame('business', $app->occupation);
+        $this->assertSame('business', $app->purpose);
         Notification::assertSentTo($user, ApplicationSubmitted::class);
     }
 
-    public function test_application_with_pending_nid_gets_nid_pending_status(): void
+    public function test_application_without_verified_nid_gets_nid_pending_status(): void
     {
         $user = $this->customer(kyc: false);
-        $user->documents()->create(['nid_number' => '1234567890', 'nid_hash' => 'x', 'front_image_path' => 'a', 'back_image_path' => 'b', 'status' => 'pending']);
 
         $this->actingAs($user)->post('/apply', $this->applicationPayload($this->product()))->assertRedirect();
         $this->assertSame(ApplicationStatus::NidPending, LoanApplication::first()->status);
@@ -59,9 +60,18 @@ class LoanApplicationTest extends TestCase
     public function test_required_fields_and_declarations_are_validated(): void
     {
         $payload = $this->applicationPayload($this->product());
-        unset($payload['accept_fees'], $payload['present_address']);
+        unset($payload['accept_terms'], $payload['occupation'], $payload['purpose']);
 
-        $this->actingAs($this->customer())->post('/apply', $payload)->assertSessionHasErrors(['accept_fees', 'present_address']);
+        $this->actingAs($this->customer())->post('/apply', $payload)->assertSessionHasErrors(['accept_terms', 'occupation', 'purpose']);
+    }
+
+    public function test_occupation_and_purpose_must_be_valid_options(): void
+    {
+        $payload = $this->applicationPayload($this->product());
+        $payload['occupation'] = 'astronaut';
+        $payload['purpose'] = 'holiday';
+
+        $this->actingAs($this->customer())->post('/apply', $payload)->assertSessionHasErrors(['occupation', 'purpose']);
     }
 
     public function test_only_one_open_application_allowed(): void

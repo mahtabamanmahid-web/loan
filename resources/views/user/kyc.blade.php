@@ -13,7 +13,7 @@
         <div class="flex-1">
             <p class="text-sm text-slate-500">{{ __('Verification Status') }}</p>
             <x-status-badge :status="$document->status" size="lg" class="mt-1" />
-            <p class="mt-2 text-sm text-slate-500">{{ __('NID') }}: <span class="font-mono">{{ $document->maskedNid() }}</span> · {{ __('Submitted') }}: {{ bn_digits($document->created_at->format('d M Y')) }}</p>
+            <p class="mt-2 text-sm text-slate-500">{{ __('Submitted') }}: {{ bn_digits($document->created_at->format('d M Y')) }}</p>
             @if($document->admin_note)<p class="mt-2 rounded-xl bg-slate-50 p-3 text-sm dark:bg-slate-800"><strong>{{ __('Note') }}:</strong> {{ $document->admin_note }}</p>@endif
         </div>
     </div>
@@ -34,10 +34,6 @@
           }
       }">
     @csrf
-    <div class="card card-pad">
-        <x-input name="nid_number" :label="__('NID Number')" icon="id-card" inputmode="numeric" maxlength="20" required :hint="__('10, 13 or 17 digits, as printed on your NID.')" />
-    </div>
-
     <div class="grid gap-5 sm:grid-cols-2 {{ $requireSelfie ? 'lg:grid-cols-3' : '' }}">
         @foreach(array_filter([
             'nid_front' => [__('NID front side'), 'id-card', true],

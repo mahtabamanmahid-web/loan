@@ -22,7 +22,6 @@
         <x-input name="min_age" type="number" :label="__('Minimum age')" :value="$s['min_age']" required />
         <x-input name="max_open_applications" type="number" :label="__('Max applications in progress')" :value="$s['max_open_applications']" required />
         <h3 class="mt-2 font-bold sm:col-span-2">{{ __('Application Rules') }}</h3>
-        <label class="flex items-center gap-2 text-sm sm:col-span-2"><input type="checkbox" name="require_nid_before_apply" value="1" class="checkbox" @checked($s['require_nid_before_apply'] == '1')>{{ __('NID must be submitted before applying') }}</label>
         <label class="flex items-center gap-2 text-sm sm:col-span-2"><input type="checkbox" name="require_selfie" value="1" class="checkbox" @checked($s['require_selfie'] == '1')>{{ __('Require selfie with NID') }}</label>
     </div>
 

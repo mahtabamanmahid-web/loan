@@ -6,13 +6,6 @@
     <x-status-badge :status="$document->status" size="lg" />
 </x-page-header>
 
-@if($duplicates->isNotEmpty())
-    <x-alert type="danger" class="mb-5" :title="__('Same NID found on other accounts')">
-        @foreach($duplicates as $dup)
-            <a href="{{ route('admin.users.show', $dup->user) }}" class="mr-3 font-semibold underline">{{ $dup->user->name }} ({{ $dup->user->phone }}) – {{ $dup->status->label() }}</a>
-        @endforeach
-    </x-alert>
-@endif
 
 <div class="grid gap-6 lg:grid-cols-3">
     <div class="space-y-6 lg:col-span-2">
@@ -36,7 +29,6 @@
         <div class="card card-pad">
             <h3 class="mb-3 font-bold">{{ __('Details') }}</h3>
             <dl class="space-y-2 text-sm">
-                <div><dt class="text-slate-500">{{ __('NID Number') }}</dt><dd class="font-mono text-lg font-bold">{{ $document->nid_number }}</dd></div>
                 <div><dt class="text-slate-500">{{ __('Name on account') }}</dt><dd class="font-semibold">{{ $document->user->name }}</dd></div>
                 <div><dt class="text-slate-500">{{ __('Date of Birth') }}</dt><dd>{{ $document->user->profile?->date_of_birth?->format('d M Y') ?? '—' }}</dd></div>
                 <div><dt class="text-slate-500">{{ __('Submitted') }}</dt><dd>{{ $document->created_at->format('d M Y, h:i A') }}</dd></div>

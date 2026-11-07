@@ -44,14 +44,9 @@ abstract class TestCase extends BaseTestCase
             'loan_term_id' => $product->terms->firstWhere('months', $months)->id,
             'amount' => $amount,
             'applicant_name' => 'Rahim Uddin',
-            'present_address' => 'House 1, Road 2, Dhaka',
-            'permanent_address' => 'Village X, Cumilla',
-            'occupation' => 'Shop owner',
-            'monthly_income' => 40000,
-            'purpose' => 'Business stock',
+            'occupation' => 'business',
+            'purpose' => 'business',
             'accept_terms' => '1',
-            'accept_fees' => '1',
-            'confirm_info' => '1',
         ];
     }
 

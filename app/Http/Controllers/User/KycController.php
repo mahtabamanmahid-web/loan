@@ -24,7 +24,6 @@ class KycController extends Controller
     {
         $kyc->submit(
             $request->user(),
-            $request->nid_number,
             $request->file('nid_front'),
             $request->file('nid_back'),
             $request->file('selfie'),

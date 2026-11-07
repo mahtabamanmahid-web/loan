@@ -65,7 +65,7 @@ class SettingService
         'max_income_multiplier' => '5',          // eligible amount ≤ income × this
         'min_age' => '18',
         'max_open_applications' => '1',
-        'require_nid_before_apply' => '1',
+        'require_nid_before_apply' => '0',
         'require_selfie' => '0',
         'reminder_days_before' => '3',
         'lender_legal_name' => '',               // licensed institution receiving fees

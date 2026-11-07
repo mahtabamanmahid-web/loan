@@ -22,14 +22,13 @@ class NidUploadTest extends TestCase
     private function upload(array $overrides = []): array
     {
         return array_merge([
-            'nid_number' => '1234567890',
             'nid_front' => UploadedFile::fake()->image('front.jpg', 800, 500),
             'nid_back' => UploadedFile::fake()->image('back.jpg', 800, 500),
             'consent' => '1',
         ], $overrides);
     }
 
-    public function test_nid_is_stored_privately_and_encrypted(): void
+    public function test_nid_photos_stored_privately_without_nid_number(): void
     {
         $user = $this->customer(kyc: false);
 
@@ -37,13 +36,11 @@ class NidUploadTest extends TestCase
 
         $doc = UserDocument::firstOrFail();
         $this->assertSame(DocumentStatus::Pending, $doc->status);
+        $this->assertNull($doc->nid_number);                    // photo only, no number collected
         Storage::disk('local')->assertExists($doc->front_image_path);
         Storage::disk('local')->assertExists($doc->back_image_path);
         // nothing on the public disk
         $this->assertEmpty(Storage::disk('public')->allFiles());
-        // NID number encrypted in DB, readable through the model
-        $this->assertNotSame('1234567890', \DB::table('user_documents')->value('nid_number'));
-        $this->assertSame('1234567890', $doc->nid_number);
         // file name is random, not the client name
         $this->assertStringNotContainsString('front', $doc->front_image_path);
     }
@@ -60,16 +57,10 @@ class NidUploadTest extends TestCase
         $this->assertDatabaseCount('user_documents', 0);
     }
 
-    public function test_invalid_nid_number_rejected(): void
+    public function test_consent_is_required(): void
     {
-        $this->actingAs($this->customer(kyc: false))->post('/kyc', $this->upload(['nid_number' => '12345']))->assertSessionHasErrors('nid_number');
-    }
-
-    public function test_same_nid_cannot_be_used_by_two_accounts(): void
-    {
-        $this->actingAs($this->customer(kyc: false))->post('/kyc', $this->upload());
-        $this->actingAs($this->customer(kyc: false))->post('/kyc', $this->upload())->assertSessionHasErrors('nid_number');
-        $this->assertDatabaseCount('user_documents', 1);
+        $this->actingAs($this->customer(kyc: false))->post('/kyc', $this->upload(['consent' => null]))->assertSessionHasErrors('consent');
+        $this->assertDatabaseCount('user_documents', 0);
     }
 
     public function test_only_authorised_admin_can_view_nid_image(): void
