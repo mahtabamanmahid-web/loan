@@ -1,0 +1,19 @@
+# ------------------------------------------------------------------
+# Used ONLY when the web server's document root is the project folder
+# (XAMPP htdocs, or cPanel when you cannot point the domain to /public).
+# Every request is sent to the public/ folder; nothing else is reachable.
+# Best practice is still: document root = <project>/public
+# ------------------------------------------------------------------
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Extra safety if mod_rewrite is missing: never serve secrets or source files
+<FilesMatch "(^\.|\.(env|md|lock|json|xml|log|sql|gz|yml|yaml)$|^artisan$)">
+    Require all denied
+</FilesMatch>
